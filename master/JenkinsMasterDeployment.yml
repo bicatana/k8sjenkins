@@ -1,0 +1,73 @@
+# Jenkins Master server deployment with persistent volume
+# These need to be less than 15 chars
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: jenkins-master
+  labels:
+    app.kubernetes.io/name: jenkins-master
+    app.kubernetes.io/part-of: jenkins-master
+  annotations:
+    prometheus.io/scrape: "true"
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30808
+  selector:
+    app: jenkins-master
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: jenkins-master
+  labels:
+    app: jenkins-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jenkins-master
+      app.kubernetes.io/part-of: jenkins-master
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jenkins-master
+        app.kubernetes.io/part-of: jenkins-master
+        app: jenkins-master
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /
+    spec:
+      app: jenkins-master
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: jenkins-master
+          image: bicatana/k8s:jenkins
+  #        securityContext:
+  #          privileged: true
+  #          allowPrivilegeEscalation: true
+          env:
+            - name: JAVA_OPTS
+              value: -Djenkins.install.runSetupWizard=false
+          ports:
+          - name: http-port
+            containerPort: 8080
+          - name: jnlp-port
+            containerPort: 50000
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkinshome
+
+      volumes:
+        - name: jenkinshome
+          persistentVolumeClaim:
+            claimName: jenkinshome

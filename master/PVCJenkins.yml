@@ -1,0 +1,15 @@
+#Persistent Volume Claim for Jenkins Home
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jenkinshome
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: osxstorage
+  resources:
+    requests:
+      storage: 5Gi

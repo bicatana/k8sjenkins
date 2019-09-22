@@ -1,0 +1,18 @@
+#Persistent Volume for Jenkins Home folder
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkinshome
+  labels:
+    type: local
+spec:
+  storageClassName: osxstorage
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/Users/bogdan/k8s/jenkinshome"
