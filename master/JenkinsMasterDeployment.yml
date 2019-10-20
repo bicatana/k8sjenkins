@@ -10,13 +10,18 @@ metadata:
     app.kubernetes.io/name: jenkins-master
     app.kubernetes.io/part-of: jenkins-master
   annotations:
-    prometheus.io/scrape: "true"
+    prometheus.io/scrape: "false"
 spec:
   type: NodePort
   ports:
-    - port: 8080
+    - name: http
+      port: 8080
       targetPort: 8080
       nodePort: 30808
+    - name: jnlp
+      port: 50000
+      targetPort: 50000
+      nodePort: 30500
   selector:
     app: jenkins-master
 
@@ -43,9 +48,11 @@ spec:
         app: jenkins-master
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/path: /
+        prometheus.io/path: /prometheus
+        prometheus.io/port: "8080"
     spec:
       app: jenkins-master
+      serviceAccountName: jenkins-master
     spec:
       imagePullSecrets:
         - name: regcred

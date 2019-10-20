@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:latest
 
 # Install required Jenkins plugins
 RUN /usr/local/bin/install-plugins.sh ssh-slaves \
