@@ -58,7 +58,7 @@ spec:
         - name: regcred
       containers:
         - name: jenkins-master
-          image: bicatana/k8s:jenkins
+          image: 
   #        securityContext:
   #          privileged: true
   #          allowPrivilegeEscalation: true

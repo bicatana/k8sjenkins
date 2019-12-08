@@ -15,4 +15,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/bogdan/k8s/jenkinshome"
+    path: 
